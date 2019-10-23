@@ -63,7 +63,10 @@ parseTest []  st = ([], st)
 
 main = do
      args <- getArgs  
-     pfile <- openFile args ReadMode
+     case args of
+        [] -> error "must supply a file to open"
+        [arg] -> do pfile <- openFile args ReadMode
+        _ -> error "too many arguments"
      contents <- hGetContents pfile
      putStr (run (map parseLine (map words (lines contents))) [] "")
      hClose pfile
