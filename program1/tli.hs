@@ -14,7 +14,6 @@ data Stmt =
 -- dummy predicate that is supposed to check if a string is a label which is a string ending with ":"
 isLabel :: String -> Bool
 isLabel (x:xs) 
-    | _ = False
     | ":" == x = True
     | otherwise = isLabel xs
 
