@@ -63,8 +63,8 @@ parseTest []  st = ([], st)
 -- needs completing for partial credit
 
 main = do
-     args <- getArgs
-     pfile <- openFile args ReadMode
+     [filePath] <- getArgs
+     pfile <- openFile filePath ReadMode
      contents <- hGetContents pfile
      putStr (run (map parseLine (map words (lines contents))) [] "")
      hClose pfile
