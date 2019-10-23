@@ -62,11 +62,9 @@ parseTest []  st = ([], st)
 -- needs completing for partial credit
 
 main = do
-     args <- getArgs  
-     case args of
-        [] -> error "must supply a file to open"
-        [arg] -> do pfile <- openFile args ReadMode
-        _ -> error "too many arguments"
+     args <- getArgs
+     print args
+     pfile <- openFile args ReadMode
      contents <- hGetContents pfile
      putStr (run (map parseLine (map words (lines contents))) [] "")
      hClose pfile
