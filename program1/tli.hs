@@ -63,7 +63,7 @@ parseTest []  st = ([], st)
 
 main = do
      args <- getArgs
-     print args
+     let args = head args
      pfile <- openFile args ReadMode
      contents <- hGetContents pfile
      putStr (run (map parseLine (map words (lines contents))) [] "")
