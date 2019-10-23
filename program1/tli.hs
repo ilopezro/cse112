@@ -14,8 +14,8 @@ data Stmt =
 -- dummy predicate that is supposed to check if a string is a label which is a string ending with ":"
 isLabel :: String -> Bool
 isLabel _ = False
-isLabel ":":[] = True
-isLabel [x:xs] = isLabel xs
+isLabel (":":[]) = True
+isLabel ([x:xs]) = isLabel xs
 
 -- takes a list of tokens as strings and returns the parsed expression
 parseExpr :: [String] -> Expr
