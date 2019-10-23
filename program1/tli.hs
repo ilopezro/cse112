@@ -1,5 +1,6 @@
 import Data.Char
 import System.IO
+import System.Environment   
 
 -- maps labels line numbers and variables to values - uses float for line numbers for simplicity
 type SymTable = [(String,Float)]
@@ -61,7 +62,8 @@ parseTest []  st = ([], st)
 -- needs completing for partial credit
 
 main = do
-     pfile <- openFile FilePath ReadMode
+     args <- getArgs  
+     pfile <- openFile args ReadMode
      contents <- hGetContents pfile
      putStr (run (map parseLine (map words (lines contents))) [] "")
      hClose pfile
