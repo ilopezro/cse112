@@ -61,7 +61,7 @@ parseTest []  st = ([], st)
 -- needs completing for partial credit
 
 main = do
-     pfile <- openFile "nano1.txt" ReadMode
+     pfile <- openFile ReadMode
      contents <- hGetContents pfile
      putStr (run (map parseLine (map words (lines contents))) [] "")
      hClose pfile
