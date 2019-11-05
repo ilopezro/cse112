@@ -49,5 +49,5 @@ test :- print_trip( depart, nyc, 'New York City', time( 9, 3)),
         
 doSomething(nyc,lax) :- test.
 
-main :- degrees_to_radians(degmin(33,39), X), 
-        format("~6s"), [X], nl.
+main :- degrees_to_radians(degmin(33,39), output), 
+        format("~6s"), [output], nl.
