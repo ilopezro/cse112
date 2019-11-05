@@ -30,7 +30,6 @@ haversine(Lat1, Lat2, Long1, Long2, Distance) :-
 *
 */
 
-convert_degrees_to_radians
 
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
     upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~02d:~02d",
