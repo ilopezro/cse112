@@ -30,6 +30,8 @@ haversine(Lat1, Lat2, Long1, Long2, Distance) :-
 *
 */
 
+degrees_to_radians(degmin(lat, long), output) :- 
+    output is (((lat + long)/60) * pi )/180.
 
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
     upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~02d:~02d",
