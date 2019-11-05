@@ -18,8 +18,12 @@
 */
 
 haversine(Lat1, Lat2, Long1, Long2, Distance) :- 
-    Dlong is Long2 - Long1, 
-    Dlat is Lat2 - Lat1, 
+    degrees_to_radians(Long2, Long2Radians),
+    degrees_to_radians(Long1, Long1Radians),
+    degrees_to_radians(Lat2, Lat2Radians),
+    degrees_to_radians(Lat1, Lat1Radians),
+    Dlong is Long2Radians - Long1Radians, 
+    Dlat is Lat2Radians - Lat1Radians, 
     A is sin(Dlat/2)**2 + cos(Lat1) * cos(Lat2) * sin(Dlong/2)**2, 
     C is 2 * atan( sqrt(A), sqrt(1-A) ), 
     Distance is C * 3956.
@@ -28,10 +32,13 @@ haversine(Lat1, Lat2, Long1, Long2, Distance) :-
 *
 * Convert Degrees into Radians
 *
+* beginning = lat + long divided by 60 turns degmin() into degrees completely
+* beginning * pi divided by 180 turns degrees into radians
+* 
 */
 
-degrees_to_radians(degmin(lat, long), output) :- 
-    output is (((lat + long)/60) * pi )/180.
+degrees_to_radians(degmin(degrees, minutes), output) :- 
+    output is (((degrees + minutes)/60) * pi )/180.
 
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
     upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~02d:~02d",
