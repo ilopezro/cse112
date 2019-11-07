@@ -51,7 +51,6 @@ doSomething(nyc,lax) :- test.
 
 main :- read(X).
 
-# testDegToRad :- 
 
 /**
 * Airport db
