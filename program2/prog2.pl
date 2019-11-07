@@ -37,7 +37,7 @@ haversine(Lat1, Lat2, Long1, Long2, Distance) :-
 * 
 */
 
-degrees_to_radians(degmin(degrees, minutes), output) :- 
+degrees_to_radians(degrees,minutes, output) :- 
     output is (((degrees + minutes)/60) * pi )/180.
 
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
@@ -49,7 +49,7 @@ test :- print_trip( depart, nyc, 'New York City', time( 9, 3)),
         
 doSomething(nyc,lax) :- test.
 
-main :- degrees_to_radians(degmin(33,39), output), 
+main :- degrees_to_radians(33,39,output), 
         format("~6d", [output]), nl.
 
 
