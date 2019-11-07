@@ -50,7 +50,7 @@ test :- print_trip( depart, nyc, 'New York City', time( 9, 3)),
 doSomething(nyc,lax) :- test.
 
 main :- degrees_to_radians(33,39,output), 
-        format("~6d", [output]), nl.
+        format("~6f", [output]), nl.
 
 
 
