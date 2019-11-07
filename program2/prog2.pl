@@ -49,7 +49,7 @@ test :- print_trip( depart, nyc, 'New York City', time( 9, 3)),
         
 doSomething(nyc,lax) :- test.
 
-main :- read(X)
+main :- read(X).
 
 # testDegToRad :- 
 
