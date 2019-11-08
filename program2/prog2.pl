@@ -50,7 +50,7 @@ degToRad(D,M,Rad) :-
 convertToTime(D,T, H, M) :- 
                             T is (D/500),
                             H is truncate(T),
-                            M is floating_point_number(T) * 60.
+                            M is float_fractional_part(T) * 60.
 
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
     upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~02d:~02d",
