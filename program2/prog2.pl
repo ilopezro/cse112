@@ -68,7 +68,7 @@ fly(A,B) :- flight(A,B,T),
             airport(B, X1, degmin(Deg3,Min3), degmin(Deg4,Min4)),
             haversine(Deg, Min, Deg3, Min3, Deg2, Min2, Deg4, Min4, Z), 
             convertToTime(Z, Time, Hours, Minutes),
-            write("Total Time: " Hours ":" Minutes),
+            write("Total Time: " + Hours + ":" + Minutes),
             nl,
     		print_trip(arrive, B, X1, time( 0,0)).
 
