@@ -37,8 +37,11 @@ haversine(Lat1, Lat2, Long1, Long2, Distance) :-
 * 
 */
 
-degrees_to_radians(degrees,minutes, output) :- 
-    output is (((degrees + minutes)/60) * pi )/180.
+degToRad(D,M,Rad) :- 
+    InitOperation is M rdiv 60,
+    Addition is D+InitOperation,
+    Numerator is Addition*pi,
+    Rad is Numerator rdiv 180 + 0.00.
 
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
     upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~02d:~02d",
@@ -49,7 +52,7 @@ test :- print_trip( depart, nyc, 'New York City', time( 9, 3)),
         
 doSomething(nyc,lax) :- test.
 
-main :- read(input).
+main :- read(input), degToRad(33,39,Rad).
 
 
 /**
