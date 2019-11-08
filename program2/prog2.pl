@@ -40,7 +40,8 @@ degToRad(D,M,Rad) :-
     InitOperation is M rdiv 60,
     Addition is D+InitOperation,
     Numerator is Addition*pi,
-    Rad is Numerator rdiv 180 + 0.00.
+    Rad is Numerator rdiv 180 + 0.00,
+    write(Rad), nl.
 
 printDebug(A) :- format( "~f", [A]), nl.
 
