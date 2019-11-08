@@ -32,7 +32,10 @@ degToRad(D,M,Rad) :-
     InitOperation is M rdiv 60,
     Addition is D+InitOperation,
     Numerator is Addition*pi,
-    Rad is Numerator rdiv 180 + 0.00.
+    Rad is Numerator rdiv 180 + 0.00,
+    printDebud(Rad).
+
+printDebug(A) :- format( "~f", [A]).
 
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
     upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~02d:~02d",
