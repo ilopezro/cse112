@@ -48,7 +48,7 @@ degToRad(D,M,Rad) :-
 * convertToTime() converts the distance into time
 **/
 
-convertToTime(D,T) :- T is round(D/500), write(T).
+convertToTime(D,T) :- T is (D/500), write(T).
 
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
     upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~02d:~02d",
