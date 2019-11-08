@@ -46,7 +46,7 @@ test :- print_trip( depart, nyc, 'New York City', time( 9, 3)),
         
 doSomething(nyc,lax) :- test.
 
-main :- read(input).
+main :- read(A), read(B), degToRad(A,B,Rad).
 
 
 /**
