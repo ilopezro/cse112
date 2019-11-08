@@ -62,7 +62,7 @@ test :- print_trip( depart, nyc, 'New York City', time( 9, 3)),
 doSomething(nyc,lax) :- test.
 
 /* Direct Flight from A to B */
-fly(A,B) :- flight(A,B,T),
+fly(A,B) :- flight(A,B, time( h , m ) ) )),
     		airport(A, X, degmin(Deg,Min), degmin(Deg2,Min2)),
     		print_trip(depart, A, X, T),
             airport(B, X1, degmin(Deg3,Min3), degmin(Deg4,Min4)),
