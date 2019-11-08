@@ -46,6 +46,7 @@ degToRad(D,M,Rad) :-
 /**
 *
 * convertToTime() converts the distance into time
+* convertToHours() converts 
 **/
 
 convertToTime(D,T) :- T is (D/500), write(T).
@@ -59,10 +60,15 @@ test :- print_trip( depart, nyc, 'New York City', time( 9, 3)),
         
 doSomething(nyc,lax) :- test.
 
-fly(A,B) :- flight(A,B,_),
-    		    airport(A, X, _, _), print_trip(depart, A, X, time( 9,30)),
-            airport(B, X1, _, _), print_trip(arrive, B, X1, time( 0,0)).
-
+/* Direct Flight from A to B */
+fly(A,B) :- flight(A,B,T),
+    		airport(A, X, degmin(Deg,Min), degmin(Deg2,Min2)),
+    		print_trip(depart, A, X, T),
+            airport(B, X1, degmin(Deg3,Min3), degmin(Deg4,Min4)),
+            haversine(Deg, Min, Deg3, Min3, Deg2, Min2, Deg4, Min4, Z), 
+            PreTime is convertToTime(Z, Time),
+            write(PreTime),
+    		print_trip(arrive, B, X1, time( 0,0)).
 main :- haversine(42,22,40,46,71,2,73,59,D), convertToTime(D, _).
 
 /**
