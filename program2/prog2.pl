@@ -25,7 +25,8 @@ haversine(LatD1, LatM1, LatD2, LatM2, LonD1, LonM1, LonD2, LonM2, Distance) :-
     Lat3 is Lat2 - Lat1,
     A is sin(Lat3/2)**2 + cos(Lat1) * cos(Lat2) * sin(Lon3/2)**2,
     C is 2 * atan( sqrt(A), sqrt(1-A) ),
-    Distance is (C * 3956)/500.
+    Distance is (C * 3956),
+    write(Distance).
 
 /**
 *
