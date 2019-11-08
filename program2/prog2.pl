@@ -33,7 +33,7 @@ degToRad(D,M,Rad) :-
     Addition is D+InitOperation,
     Numerator is Addition*pi,
     Rad is Numerator rdiv 180 + 0.00,
-    printDebud(Rad).
+    printDebug(Rad).
 
 printDebug(A) :- format( "~f", [A]).
 
