@@ -41,10 +41,14 @@ degToRad(D,M,Rad) :-
     InitOperation is M rdiv 60,
     Addition is D+InitOperation,
     Numerator is Addition*pi,
-    Rad is Numerator rdiv 180 + 0.00,
-    write(Rad), nl.
+    Rad is Numerator rdiv 180 + 0.00.
 
-printDebug(A) :- format( "~f", [A]), nl.
+/**
+*
+* convertToTime() converts the distance into time
+**/
+
+convertToTime(D,T) :- T is round(D/500), write(T).
 
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
     upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~02d:~02d",
