@@ -68,7 +68,8 @@ fly(A,B) :- flight(A,B,T),
             PreTime is convertToTime(Z, Time),
             write(PreTime),
     		print_trip(arrive, B, X1, time( 0,0)).
-main :- haversine(42,22,40,46,71,2,73,59,D), convertToTime(D, _).
+
+main :- read(A), read(B), fly(A,B). %haversine(42,22,40,46,71,2,73,59,D), convertToTime(D, _).
 
 /**
 * Airport db
