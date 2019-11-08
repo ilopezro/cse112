@@ -17,16 +17,7 @@
 *
 */
 
-# haversine(Lat1, Lat2, Long1, Long2, Distance) :- 
-#     degrees_to_radians(Long2, Long2Radians),
-#     degrees_to_radians(Long1, Long1Radians),
-#     degrees_to_radians(Lat2, Lat2Radians),
-#     degrees_to_radians(Lat1, Lat1Radians),
-#     Dlong is Long2Radians - Long1Radians, 
-#     Dlat is Lat2Radians - Lat1Radians, 
-#     A is sin(Dlat/2)**2 + cos(Lat1) * cos(Lat2) * sin(Dlong/2)**2, 
-#     C is 2 * atan( sqrt(A), sqrt(1-A) ), 
-#     Distance is C * 3956.
+
 
 /**
 *
