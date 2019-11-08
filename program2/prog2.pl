@@ -14,7 +14,6 @@
 * a = (sin(dlat/2))^2 + cos(lat1) * cos(lat2) * (sin(dlon/2))^2  
 * c = 2 * atan2(sqrt(a), sqrt(1-a))   
 * d = R * c
-*
 */
 
 
@@ -32,10 +31,9 @@ degToRad(D,M,Rad) :-
     InitOperation is M rdiv 60,
     Addition is D+InitOperation,
     Numerator is Addition*pi,
-    Rad is Numerator rdiv 180 + 0.00,
-    printDebug(Rad).
+    Rad is Numerator rdiv 180 + 0.00.
 
-printDebug(A) :- format( "~f", [A]).
+printDebug(A) :- format( "~f", [A]), nl.
 
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
     upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~02d:~02d",
@@ -47,7 +45,6 @@ test :- print_trip( depart, nyc, 'New York City', time( 9, 3)),
 doSomething(nyc,lax) :- test.
 
 main :- read(A), read(B), degToRad(A,B,Rad).
-
 
 /**
 * Airport db
@@ -109,4 +106,3 @@ flight( den, chi, time( 18,30 ) ).
 flight( lax, sjc, time( 19,30 ) ).
 flight( lax, sfo, time( 20, 0 ) ).
 flight( lax, sea, time( 22,30 ) ).
-
