@@ -48,7 +48,7 @@ degToRad(D,M,Rad) :-
 * convertToHours() converts 
 **/
 
-convertToTime(D,T) :- T is (D/500), write(T).
+convertToTime(D,T) :- T is (D/500).
 
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
     upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~02d:~02d",
@@ -65,8 +65,8 @@ fly(A,B) :- flight(A,B,T),
     		print_trip(depart, A, X, T),
             airport(B, X1, degmin(Deg3,Min3), degmin(Deg4,Min4)),
             haversine(Deg, Min, Deg3, Min3, Deg2, Min2, Deg4, Min4, Z), 
-            PreTime is convertToTime(Z, Time),
-            write(PreTime),
+            convertToTime(Z, Time),
+            write(Time),
     		print_trip(arrive, B, X1, time( 0,0)).
 
 main :- read(A), read(B), fly(A,B). %haversine(42,22,40,46,71,2,73,59,D), convertToTime(D, _).
