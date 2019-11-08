@@ -59,7 +59,7 @@ fly(A,B) :- flight(A,B,_),
     		    airport(A, X, _, _), print_trip(depart, A, X, time( 9,30)),
             airport(B, X1, _, _), print_trip(arrive, B, X1, time( 0,0)).
 
-main :- read(A), read(B), degToRad(A,B,_).
+main :- haversine(42,22,40,46,71,2,73,59,_).
 
 /**
 * Airport db
