@@ -128,9 +128,10 @@ findFlights(A, B, [flight(A, C, T) | TailOfFlightList]) :-
 */
 
 findFlights(A, B, [flight( PreviousA, PreviousB, time( Hour1, Minute1)) | PreviousFlights], [flight( A, NextDest, time( Hour2, Minute2))| NextDestinations]) :-
+    \+ (A = B), 
     flight(A, NextDest, time(Hour2, Minute2)), 
     airport(PreviousA, _, degmin( Deg, Min), degmin(Deg2, Min2)),
-    airport(PreviousB, _, degmin( Deg3, Min4), degmin(Deg4, Min4)),
+    airport(PreviousB, _, degmin( Deg3, Min3), degmin(Deg4, Min4)),
     haversine(Deg, Min, Deg3, Min3, Deg2, Min2, Deg4, Min4, Z), 
     convertToTime(Z, T, Hours, Minutes), 
     ArrivalTime is T + Hour1 + (Minute1/60), 
