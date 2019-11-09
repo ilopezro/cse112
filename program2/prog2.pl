@@ -54,9 +54,9 @@ checkTime(H, M, FH, FM) :-
 # findNextValidFlight(CurrHour, CurrMinute, [time(NextHour, NextMinute) | T], NHour, NMinute) :-
 #     (NextHour < CurrHour)
 
-findValidFlight(PreviousHour, PreviousMinute, A,B) :- 
-            flight(A,B, time( _,_) ),
-            setof(T, flight(A,B,T), FlightTimes).
+# findValidFlight(PreviousHour, PreviousMinute, A,B) :- 
+#             flight(A,B, time( _,_) ),
+#             setof(T, flight(A,B,T), FlightTimes).
             
 
 /* Direct Flight from A to B */
