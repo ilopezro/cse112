@@ -47,8 +47,9 @@ degToRad(D,M,Rad) :-
 convertToTime(D,T, H, M) :- T is (D/500), H is truncate(T), M is truncate(float_fractional_part(T) * 60).
 
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
-    upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~02d:~02d",
-    [Action, Upper_code, Name, Hour, Minute]),   nl.
+    upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~`0t~d~30|:~`0t~d~33|",           
+    [Action, Upper_code, Name, Hour, Minute]),   
+    nl.
 
 
 /* Direct Flight from A to B */
