@@ -92,7 +92,7 @@ haversine(LatD1, LatM1, LatD2, LatM2, LonD1, LonM1, LonD2, LonM2, Distance) :-
 * convertToTime(Dis, Time, Hours, Minutes) converts the distance into time
 **/
 
-convertToTime(D, H, M) :- T is (D/500), H is truncate(T), M is truncate(float_fractional_part(T) * 60).
+convertToTime(D, T, H, M) :- T is (D/500), H is truncate(T), M is truncate(float_fractional_part(T) * 60).
 
 /**
 * Convert Degrees into Radians
@@ -133,4 +133,5 @@ findFlights(A, B, [flight( PreviousA, PreviousB, time( Hour1, Minute1)) | PrevFl
     airport(PreviousA, _, degmin( Deg, Min), degmin(Deg2, Min2)),
     airport(PreviousB, _, degmin( Deg3, Min4), degmin(Deg4, Min4)),
     haversine(Deg, Min, Deg3, Min3, Deg2, Min2, Deg4, Min4, Z), 
-    convertToTime(Z, Hours, Minutes).
+    convertToTime(Z, T, Hours, Minutes).
+
