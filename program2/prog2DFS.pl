@@ -143,7 +143,7 @@ findFlights(A, B, [flight( PreviousA, PreviousB, time( Hour1, Minute1)) | Previo
     haversine(Deg5, Min5, Deg7, Min7, Deg6, Min6, Deg8, Min8, DistanceTwo), 
     convertToTime(DistanceTwo, TimeTwo, Hours2, Minutes2), 
     NewPreviousFlights = append([flight( PreviousA,PreviousB, time(Hour1,Minute1) )],PreviousFlights),
-    \+ (member( NextNode, NewPreviousFlights )),
+    \+ (member( NextDest, NewPreviousFlights )),
     \+ ( NextDest = PreviousB ),
     \+ ( PreviousA = NextDest),
     listpath( NextNode, End, [flight( Node, NextNode, time(Hour2,Minute2) )| NewPreviousFlights], NextDestinations).
