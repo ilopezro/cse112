@@ -128,7 +128,6 @@ findFlights(A, B, [flight(A, C, T) | TailOfFlightList]) :-
 */
 
 findFlights(A, B, [flight( PreviousA, PreviousB, time( Hour1, Minute1)) | PreviousFlights], [flight( A, NextDest, time( Hour2, Minute2))| NextDestinations]) :-
-    \+ (A = B), 
     flight(A, NextDest, time(Hour2, Minute2)), 
     airport(PreviousA, _, degmin( Deg, Min), degmin(Deg2, Min2)),
     airport(PreviousB, _, degmin( Deg3, Min4), degmin(Deg4, Min4)),
