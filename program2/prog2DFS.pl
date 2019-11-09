@@ -65,7 +65,7 @@ flight( lax, sea, time( 22,30 ) ).
 * main method that gets start and end destination from console and calls the two functions
 * findFlights, printFlights
 */
-main :- read(Start), read(Destination), findFlights(Start, Destination, FlightPath).
+main :- read(Start), read(Destination), findFlights(Start, Destination, FlightPath), printItinerary(FlightPath).
 
 /**
 * Haversine formula
