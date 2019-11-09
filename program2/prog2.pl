@@ -49,7 +49,8 @@ convertToTime(D,T, H, M) :- T is (D/500), H is truncate(T), M is truncate(float_
 checkTime(H, M, FH, FM) :- 
     (M > 60),
     FH is H + 1,
-    FM is M - 60.
+    FM is M - 60, 
+    write(FH), nl, write(FM).
 
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
     upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~`0t~d~30|:~`0t~d~33|",           
@@ -67,8 +68,8 @@ findValidFlight(PreviousHour, PreviousMinute, A, B) :-
             convertToTime(Z, _, Hours, Minutes),
             TotalHours is InitHours + Hours, 
             TotalMinutes is InitMin + Minutes, 
-            checkTime(TotalHours, TotalMinutes, FinalHours, FinalMinutes),
-    		print_trip(arrive, B, X1, time( FinalHours, FinalMinutes).
+            checkTime(TotalHours, TotalMinutes, FinalHours, FinalMinutes).
+    		/*print_trip(arrive, B, X1, time( FinalHours, FinalMinutes).*/
 
 findValidFlight(PreviousHour, PreviousMinute, A,B) :- write("Indirect Flight"), nl.
 
