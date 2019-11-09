@@ -94,6 +94,12 @@ haversine(LatD1, LatM1, LatD2, LatM2, LonD1, LonM1, LonD2, LonM2, Distance) :-
 
 convertToTime(D, T, H, M) :- T is (D/500), H is truncate(T), M is truncate(float_fractional_part(T) * 60).
 
+
+checkTime(H, M, FH, FM) :- 
+    (M > 60),
+    FH is H + 1,
+    FM is M - 60.
+
 /**
 * Convert Degrees into Radians
 *
