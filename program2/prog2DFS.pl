@@ -127,11 +127,19 @@ findFlights(A, B, [flight(A, C, T) | TailOfFlightList]) :-
 * findFlights(A, B, [], []) will recursively look for a path between start to end
 */
 
-findFlights(A, B, [flight( PreviousA, PreviousB, time( Hour1, Minute1)) | PrevFlights], [flight( A, NextDest, time( Hour2, Minute2))| NextDestinations]) :-
+findFlights(A, B, [flight( PreviousA, PreviousB, time( Hour1, Minute1)) | PreviousFlights], [flight( A, NextDest, time( Hour2, Minute2))| NextDestinations]) :-
     \+ (A = B), 
     flight(A, NextDest, time(Hour2, Minute2)), 
     airport(PreviousA, _, degmin( Deg, Min), degmin(Deg2, Min2)),
     airport(PreviousB, _, degmin( Deg3, Min4), degmin(Deg4, Min4)),
     haversine(Deg, Min, Deg3, Min3, Deg2, Min2, Deg4, Min4, Z), 
-    convertToTime(Z, T, Hours, Minutes).
+    convertToTime(Z, T, Hours, Minutes), 
+    ArrivalTime is T + Hour1 + (Minute1/60), 
+    DepartureTime is Hour2 + (Minute2/60), 
+    AcceptableDepartureTime is ArrivalTime + 0.50, 
+    AcceptableDepartureTime =< DepartureTime, 
+    airport(A, _, degmin( Deg5, Min5), degmin(Deg6, Min6)),
+    airport(NextDest, _, degmin( Deg7, Min7), degmin(Deg8, Min8)),
+    haversine(Deg5, Min5, Deg7, Min7, Deg6, Min6, Deg8, Min8, DistanceTwo), 
+    convertToTime(DistanceTwo, TimeTwo, Hours2, Minutes2).
 
