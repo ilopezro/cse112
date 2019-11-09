@@ -149,5 +149,5 @@ findFlights(A, B, [flight( PreviousA, PreviousB, time( Hour1, Minute1)) | Previo
     \+ (member( NextDest, NewPreviousFlights )),
     \+ ( NextDest = PreviousB ),
     \+ ( PreviousA = NextDest),
-    listpath( NextNode, End, [flight( Node, NextNode, time(Hour2,Minute2) )| NewPreviousFlights], NextDestinations).
+    findFlights( NextDest, End, [flight( A, NextDest, time(Hour2,Minute2) )| NewPreviousFlights], NextDestinations).
 
