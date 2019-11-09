@@ -116,11 +116,6 @@ print_trip( Action, Code, Name, time( Hour, Minute)) :-
     nl.
 
 /**
-* findFlights will return an empty list if they come from same airport
-*/
-findFlights( ArrivalAirport, ArrivalAirport, _ , [] ).
-
-/**
 * findFlights(ArrivalAirport, DepartureAirport, [list of flights]) is the driver for the program 
 * that will call FindFlights(Curr, Next, [], []) to get a list of airports 
 */
