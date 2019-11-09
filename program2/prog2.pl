@@ -69,7 +69,9 @@ findValidFlight(PreviousHour, PreviousMinute, A, B) :-
             TotalHours is InitHours + Hours, 
             TotalMinutes is InitMin + Minutes, 
             checkTime(TotalHours, TotalMinutes, FinalHours, FinalMinutes),
-    		print_trip(arrive, B, X1, time( FinalHours, FinalMinutes).
+            FHours is FinalHours,
+            FMinutes is FinalMinutes, 
+    		print_trip(arrive, B, X1, time(FHours, FMinutes).
 
 findValidFlight(PreviousHour, PreviousMinute, A,B) :- write("Indirect Flight"), nl.
 
