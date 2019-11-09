@@ -169,11 +169,11 @@ printItinerary([flight( CurrAirport, NextAirport, time( Hours, Minutes)) | RestO
     print_trip(depart, CurrAirport, Leaving, time(Hours, Minutes)),
     haversine(Deg, Min, Deg3, Min3, Deg2, Min2, Deg4, Min4, Z), 
     convertToTime(Z, _, Hours1, Minutes1),
-    /*TotalHours is Hours + Hours1, 
-    TotalMinutes is Minutes + Minutes1, 
+    TotalHours is Hours + Hours1, 
+    /*TotalMinutes is Minutes + Minutes1, 
     write(TotalMinutes), nl,
     checkTime(TotalHours, TotalMinutes, FinalHours, FinalMinutes),*/
-    print_trip(arrive, NextAirport, Arriving, time(Hours+Hours1,Minutes+Minutes1)),
+    print_trip(arrive, NextAirport, Arriving, time(TotalHours,Minutes+Minutes1)),
     printItinerary(RestOfTrip).
 
 
