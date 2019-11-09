@@ -137,7 +137,7 @@ findFlights(A, B, [flight( PreviousA, PreviousB, time( Hour1, Minute1)) | Previo
     ArrivalTime is T + Hour1 + (Minute1/60), 
     DepartureTime is Hour2 + (Minute2/60), 
     AcceptableDepartureTime is ArrivalTime + 0.50, 
-    AcceptableDepartureTime =< DepartureTime, 
+   /*AcceptableDepartureTime =< DepartureTime, */
     airport(A, _, degmin( Deg5, Min5), degmin(Deg6, Min6)),
     airport(NextDest, _, degmin( Deg7, Min7), degmin(Deg8, Min8)),
     haversine(Deg5, Min5, Deg7, Min7, Deg6, Min6, Deg8, Min8, DistanceTwo), 
