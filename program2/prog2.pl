@@ -46,6 +46,9 @@ degToRad(D,M,Rad) :-
 
 convertToTime(D,T, H, M) :- T is (D/500), H is truncate(T), M is truncate(float_fractional_part(T) * 60).
 
+checkTime(H, M, FH, FM) :- 
+    (M>=60 -> (FH is H + 1, FM is M - 60.) ; FH is H, FM is M.).
+
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
     upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~`0t~d~30|:~`0t~d~33|",           
     [Action, Upper_code, Name, Hour, Minute]),   
@@ -60,11 +63,14 @@ findValidFlight(PreviousHour, PreviousMinute, A, B) :-
             airport(B, X1, degmin(Deg3,Min3), degmin(Deg4,Min4)),
             haversine(Deg, Min, Deg3, Min3, Deg2, Min2, Deg4, Min4, Z), 
             convertToTime(Z, _, Hours, Minutes),
-    		print_trip(arrive, B, X1, time( (InitHours + Hours), (InitMin + Minutes))).
+            TotalHours is InitHours + Hours, 
+            TotalMinutes is InitMin + Minutes, 
+            checkTime(TotalHours, TotalMinutes, FinalHours, FinalMinutes),
+    		print_trip(arrive, B, X1, time( FinalHours, FinalMinutes).
 
-findValidFlight(PreviousHour, PreviousMinute, A,B) :- write("Indirect Flight").
+findValidFlight(PreviousHour, PreviousMinute, A,B) :- write("Indirect Flight"), nl.
 
-main :- read(A), read(B), findValidFlight(0,0,A,B). %haversine(42,22,40,46,71,2,73,59,D), convertToTime(D, _).
+main :- read(A), read(B), findValidFlight(0,0,A,B).
 
 /**
 * Airport db
