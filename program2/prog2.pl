@@ -55,11 +55,11 @@ print_trip( Action, Code, Name, time( Hour, Minute)) :-
 findValidFlight(PreviousHour, PreviousMinute, A, B) :- 
             flight(A,B, time( _,_) ),
     		airport(A, X, degmin(Deg,Min), degmin(Deg2,Min2)),
-    		print_trip(depart, A, X, time(initHours, initMin)),
+    		print_trip(depart, A, X, time(InitHours, InitMin)),
             airport(B, X1, degmin(Deg3,Min3), degmin(Deg4,Min4)),
             haversine(Deg, Min, Deg3, Min3, Deg2, Min2, Deg4, Min4, Z), 
             convertToTime(Z, _, Hours, Minutes),
-    		print_trip(arrive, B, X1, time( (initHours + Hours), (initMin + Minutes))).
+    		print_trip(arrive, B, X1, time( (InitHours + Hours), (InitMin + Minutes))).
 
 findValidFlight(PreviousHour, PreviousMinute, A,B) :- write("Indirect Flight").
 
