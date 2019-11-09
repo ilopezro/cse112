@@ -170,6 +170,7 @@ printItinerary([flight( CurrAirport, NextAirport, time( Hours, Minutes))| RestOf
     TotalHours is Hours + Hours1, 
     TotalMinutes is Minutes + Minutes1, 
     checkTime(TotalHours, TotalMinutes, FinalHours, FinalMinutes),
-    print_trip(arrive, NextAirport, Arriving, time(FinalHours, FinalMinutes)).
+    print_trip(arrive, NextAirport, Arriving, time(FinalHours, FinalMinutes)), 
+    printItinerary(RestOfTrip).
 
 printItinerary([]) :- nl.
