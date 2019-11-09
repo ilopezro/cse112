@@ -49,8 +49,8 @@ convertToTime(D,T, H, M) :- T is (D/500), H is truncate(T), M is truncate(float_
 checkTime(H, M, FH, FM) :- 
     ( 
         M >= 60 
-        -> FH is H + 1, FM is M - 60. 
-        ;   FH is H, FM is M.
+        -> FH is H + 1, FM is M - 60 
+        ;   FH is H, FM is M
         ).
 
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
