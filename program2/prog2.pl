@@ -53,7 +53,7 @@ print_trip( Action, Code, Name, time( Hour, Minute)) :-
 
 /* Direct Flight from A to B */
 findValidFlight(PreviousHour, PreviousMinute, A, B) :- 
-            flight(A,B, time( _,_) ),
+            flight(A,B, time( InitHours,InitMin) ),
     		airport(A, X, degmin(Deg,Min), degmin(Deg2,Min2)),
     		print_trip(depart, A, X, time(InitHours, InitMin)),
             airport(B, X1, degmin(Deg3,Min3), degmin(Deg4,Min4)),
