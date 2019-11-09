@@ -120,7 +120,7 @@ findFlights( ArrivalAirport, ArrivalAirport, _ , [] ).
 */
 
 findFlights(A, B, [flight(A, C, T) | TailOfFlightList]) :- 
-    flight(A, C, T), findFlights(C, B, [[flight(A, C, T)], TailOfFlightList).
+    flight(A, C, T), findFlights(C, B, [flight(A, C, T)], TailOfFlightList).
 
 /**
 * findFlights(A, B, [], []) will recursively look for a path between start to end
