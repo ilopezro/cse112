@@ -123,6 +123,9 @@ print_trip( Action, Code, Name, time( Hour, Minute)) :-
 findFlights(A, B, [flight(A, C, T) | TailOfFlightList]) :- 
     flight(A, C, T), findFlights(C, B, [flight(A, C, T)], TailOfFlightList).
 
+
+findFlights( Airport, Airport, _, [] ).
+
 /**
 * findFlights(A, B, [], []) will recursively look for a path between start to end
 */
