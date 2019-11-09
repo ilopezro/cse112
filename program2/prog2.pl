@@ -51,11 +51,13 @@ checkTime(H, M, FH, FM) :-
     FH is H + 1,
     FM is M - 60.
 
-print_trip( Action, Code, Name, time( Hour, Minute)) :-   
-    upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~`0t~d~30|:~`0t~d~33|",           
-    [Action, Upper_code, Name, Hour, Minute]),   
-    nl.
+# findNextValidFlight(CurrHour, CurrMinute, [time(NextHour, NextMinute) | T], NHour, NMinute) :-
+#     (NextHour < CurrHour)
 
+findValidFlight(PreviousHour, PreviousMinute, A,B) :- 
+            flight(A,B, time( _,_) ),
+            setof(T, flight(A,B,T), FlightTimes).
+            
 
 /* Direct Flight from A to B */
 findValidFlight(PreviousHour, PreviousMinute, A, B) :- 
@@ -70,7 +72,10 @@ findValidFlight(PreviousHour, PreviousMinute, A, B) :-
             checkTime(TotalHours, TotalMinutes, FinalHours, FinalMinutes),
     		print_trip(arrive, B, X1, time(FinalHours, FinalMinutes)).
 
-findValidFlight(PreviousHour, PreviousMinute, A,B) :- write("Indirect Flight"), nl.
+print_trip( Action, Code, Name, time( Hour, Minute)) :-   
+    upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~`0t~d~30|:~`0t~d~33|",           
+    [Action, Upper_code, Name, Hour, Minute]),   
+    nl.
 
 main :- read(A), read(B), findValidFlight(0,0,A,B).
 
@@ -89,6 +94,7 @@ airport( nyc, 'New York City   ', degmin(  40,46 ), degmin(  73,59 ) ).
 airport( sea, 'Seattle-Tacoma  ', degmin(  47,27 ), degmin( 122,17 ) ).
 airport( sfo, 'San Francisco   ', degmin(  37,37 ), degmin( 122,23 ) ).
 airport( sjc, 'San Jose        ', degmin(  37,22 ), degmin( 121,56 ) ).
+
 
 flight( bos, nyc, time( 7,30 ) ).
 flight( dfw, den, time( 8, 0 ) ).
