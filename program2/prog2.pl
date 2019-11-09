@@ -28,12 +28,10 @@ haversine(LatD1, LatM1, LatD2, LatM2, LonD1, LonM1, LonD2, LonM2, Distance) :-
     Distance is (C * 3956).
 
 /**
-*
 * Convert Degrees into Radians
 *
 * beginning = lat + long divided by 60 turns degmin() into degrees completely
 * beginning * pi divided by 180 turns degrees into radians
-* 
 */
 
 degToRad(D,M,Rad) :- 
@@ -43,37 +41,29 @@ degToRad(D,M,Rad) :-
     Rad is Numerator rdiv 180 + 0.00.
 
 /**
-*
 * convertToTime(Dis, Time, Hours, Minutes) converts the distance into time
 **/
 
-convertToTime(D,T, H, M) :- 
-                            T is (D/500),
-                            H is truncate(T),
-                            M is truncate(float_fractional_part(T) * 60).
+convertToTime(D,T, H, M) :- T is (D/500), H is truncate(T), M is truncate(float_fractional_part(T) * 60).
 
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
     upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~02d:~02d",
     [Action, Upper_code, Name, Hour, Minute]),   nl.
 
-test :- print_trip( depart, nyc, 'New York City', time( 9, 3)),
-        print_trip( arrive, lax, 'Los Angeles', time( 14, 22)).
-        
-doSomething(nyc,lax) :- test.
 
 /* Direct Flight from A to B */
-fly(A,B) :- flight(A,B, _),
-            setof(T, flight(A,B,T),Times),
+findValidFlight(PreviousHour, PreviousMinute, A, B) :- 
+            flight(A,B, time( _,_) ),
     		airport(A, X, degmin(Deg,Min), degmin(Deg2,Min2)),
-    		print_trip(depart, A, X, T),
+    		print_trip(depart, A, X, [time(d,m) | ]),
             airport(B, X1, degmin(Deg3,Min3), degmin(Deg4,Min4)),
             haversine(Deg, Min, Deg3, Min3, Deg2, Min2, Deg4, Min4, Z), 
             convertToTime(Z, _, Hours, Minutes),
     		print_trip(arrive, B, X1, time( 0,0)).
 
-fly(A,B) :- write("Indirect Flight").
+findValidFlight(PreviousHour, PreviousMinute, A,B) :- write("Indirect Flight").
 
-main :- read(A), read(B), fly(A,B). %haversine(42,22,40,46,71,2,73,59,D), convertToTime(D, _).
+main :- read(A), read(B), findValidFlight(0,0,A,B). %haversine(42,22,40,46,71,2,73,59,D), convertToTime(D, _).
 
 /**
 * Airport db
