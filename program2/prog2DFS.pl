@@ -151,3 +151,15 @@ findFlights(A, B, [flight( PreviousA, PreviousB, time( Hour1, Minute1)) | Previo
     \+ ( PreviousA = NextDest),
     findFlights( NextDest, End, [flight( A, NextDest, time(Hour2,Minute2) )| NewPreviousFlights], NextDestinations).
 
+/**
+* printItinerary will take in the list of destinations and will output to console
+*/
+
+printItinerary([flight( CurrAirport, NextAirport, time( Hours, Minutes))| RestOfTrip]) :- 
+    airport(CurrAirport, Leaving, degmin( Deg, Min), degmin(Deg2, Min2)),
+    airport(NextAirport, Arriving, degmin( Deg3, Min3), degmin(Deg4, Min4)),
+    flight(CurrAirport, NextAirport, time( Hour1, Minute1)),
+    haversine(Deg, Min, Deg3, Min3, Deg2, Min2, Deg4, Min4, Z), 
+    convertToTime(Z, T, Hours, Minutes),
+    print_trip(depart, CurrAirport, Leaving, time(Hour1, Minute1)),
+    print_trip(arrive, NextAirport, Arriving, time(Hour1, Minute1)).
