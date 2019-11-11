@@ -47,16 +47,9 @@ degToRad(D,M,Rad) :-
 convertToTime(D,T, H, M) :- T is (D/500), H is truncate(T), M is truncate(float_fractional_part(T) * 60).
 
 checkTime(H, M, FH, FM) :- 
-    (M > 60),
+    (M > 60), 
     FH is H + 1,
     FM is M - 60.
-
-# findNextValidFlight(CurrHour, CurrMinute, [time(NextHour, NextMinute) | T], NHour, NMinute) :-
-#     (NextHour < CurrHour)
-
-# findValidFlight(PreviousHour, PreviousMinute, A,B) :- 
-#             flight(A,B, time( _,_) ),
-#             setof(T, flight(A,B,T), FlightTimes).
             
 
 /* Direct Flight from A to B */
@@ -71,6 +64,19 @@ findValidFlight(PreviousHour, PreviousMinute, A, B) :-
             TotalMinutes is InitMin + Minutes, 
             checkTime(TotalHours, TotalMinutes, FinalHours, FinalMinutes),
     		print_trip(arrive, B, X1, time(FinalHours, FinalMinutes)).
+
+findValidFlight(PreviousHour, PreviousMinute, A, B) :-
+   flight(A, B, time(_,_)),
+   setof(T,flight(A,B,T), Times),
+   flight(A,B,time(NextHour,NextMinute)),
+   airport(A, X, degmin(Deg,Min), degmin(Deg2,Min2)),
+   airport(B, X1, degmin(Deg3,Min3), degmin(Deg4,Min4)),
+   haversine(Deg, Min, Deg3, Min3, Deg2, Min2, Deg4, Min4, Z), 
+   convertToTime(Z, _, Hours, Minutes),
+   TotalHours is InitHours + Hours, 
+   TotalMinutes is InitMin + Minutes, 
+   print_trip( depart, A, X, time(X,Y)),
+   print_trip( arrive, B, X1, time(TotalHours, TotalMinutes).
 
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
     upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~`0t~d~30|:~`0t~d~33|",           
