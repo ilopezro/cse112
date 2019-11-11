@@ -151,7 +151,7 @@ findFlights(A, B, [flight( PreviousA, PreviousB, time( Hour1, Minute1)) | Previo
     airport(NextDest, _, degmin( Deg7, Min7), degmin(Deg8, Min8)),
     haversine(Deg5, Min5, Deg7, Min7, Deg6, Min6, Deg8, Min8, DistanceTwo), 
     convertToTime(DistanceTwo, TimeTwo, Hours2, Minutes2), 
-    NewPreviousFlights = append([flight( PreviousA,PreviousB, time(Hour1,Minute1) )],PreviousFlights),
+    append([flight( PreviousA,PreviousB, time(Hour1,Minute1) )],PreviousFlights,NewPreviousFlights),
     \+ (member( NextDest, NewPreviousFlights )),
     \+ ( NextDest = PreviousB ),
     \+ ( PreviousA = NextDest),
@@ -171,7 +171,7 @@ printItinerary([flight( CurrAirport, NextAirport, time( Hours, Minutes)) | RestO
     convertToTime(Z, _, Hours1, Minutes1),
     TotalHours is Hours + Hours1, 
     TotalMinutes is Minutes + Minutes1, 
-    checkTime(TotalHours, TotalMinutes, FinalHours, FinalMinutes),
+    /*checkTime(TotalHours, TotalMinutes, FinalHours, FinalMinutes),*/
     print_trip(arrive, NextAirport, Arriving, time(FinalHours,FinalMinutes)),
     printItinerary(RestOfTrip).
 
