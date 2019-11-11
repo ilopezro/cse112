@@ -68,6 +68,7 @@ findValidFlight(PreviousHour, PreviousMinute, A, B) :-
 findValidFlight(PreviousHour, PreviousMinute, A, B) :-
    flight(A, B, time(_,_)),
    setof(T,flight(A,B,T), Times),
+   findNextValidFlight(PreviousHour, PreviousMinute, Times, NextHour, NextMinute)
    flight(A,B,time(NextHour,NextMinute)),
    airport(A, X, degmin(Deg,Min), degmin(Deg2,Min2)),
    airport(B, X1, degmin(Deg3,Min3), degmin(Deg4,Min4)),
@@ -77,6 +78,15 @@ findValidFlight(PreviousHour, PreviousMinute, A, B) :-
    TotalMinutes is InitMin + Minutes, 
    print_trip( depart, A, X, time(X,Y)),
    print_trip( arrive, B, X1, time(TotalHours, TotalMinutes).
+
+findNextValidFlight(CurrHours, CurrMinutes, [time(H1, M1) | Tail], DepartureHour, DepartureMinutes) :- 
+    \+ (H1 > CurrHours) ,
+    flightAfterArrivalTime(ArrH, ArrM, Tail, DepartureHour,DepartureMinutes).
+
+findNextValidFlight(CurrHours, CurrMinutes, [time(H1, M1) | Tail], DepartureHour, DepartureMinutes) :- 
+    (H > ArrH),
+    DepartureHour is H1,
+    DepartureMinutes is M1.
 
 print_trip( Action, Code, Name, time( Hour, Minute)) :-   
     upcase_atom( Code, Upper_code),   format( "~6s  ~3s  ~s~26|  ~`0t~d~30|:~`0t~d~33|",           
