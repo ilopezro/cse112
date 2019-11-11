@@ -81,7 +81,7 @@ findValidFlight(PreviousHour, PreviousMinute, A, B) :-
    TotalHours is PreviousHour + NextHour, 
    TotalMinutes is PreviousMinute + NextMinute, 
    print_trip( depart, A, X, time(NextHour,NextMinute)),
-   print_trip( arrive, B, X1, time(TotalHours, TotalMinutes).
+   print_trip( arrive, B, X1, time(TotalHours, TotalMinutes)).
 
 findNextValidFlight(CurrHours, CurrMinutes, [time(H1, M1) | Tail], DepartureHour, DepartureMinutes) :- 
     \+ (H1 > CurrHours) ,
