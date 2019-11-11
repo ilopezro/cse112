@@ -50,6 +50,10 @@ checkTime(H, M, FH, FM) :-
     (M > 60), 
     FH is H + 1,
     FM is M - 60.
+
+checkTime(H, M, FH, FM) :-
+    FH is H, 
+    FM is M.
             
 
 /* Direct Flight from A to B */
@@ -68,7 +72,7 @@ findValidFlight(PreviousHour, PreviousMinute, A, B) :-
 findValidFlight(PreviousHour, PreviousMinute, A, B) :-
    flight(A, B, time(_,_)),
    setof(T,flight(A,B,T), Times),
-   findNextValidFlight(PreviousHour, PreviousMinute, Times, NextHour, NextMinute)
+   findNextValidFlight(PreviousHour, PreviousMinute, Times, NextHour, NextMinute),
    %flight(A, B, time(NextHour,NextMinute)),
    airport(A, X, degmin(Deg,Min), degmin(Deg2,Min2)),
    airport(B, X1, degmin(Deg3,Min3), degmin(Deg4,Min4)),
