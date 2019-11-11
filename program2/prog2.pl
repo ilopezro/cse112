@@ -85,7 +85,7 @@ findValidFlight(PreviousHour, PreviousMinute, A, B) :-
 
 findNextValidFlight(CurrHours, CurrMinutes, [time(H1, M1) | Tail], DepartureHour, DepartureMinutes) :- 
     \+ (H1 > CurrHours) ,
-    flightAfterArrivalTime(ArrH, ArrM, Tail, DepartureHour,DepartureMinutes).
+    flightAfterArrivalTime(CurrHours, CurrMinutes, Tail, DepartureHour,DepartureMinutes).
 
 findNextValidFlight(CurrHours, CurrMinutes, [time(H1, M1) | Tail], DepartureHour, DepartureMinutes) :- 
     (H1 > CurrHours),
