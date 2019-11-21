@@ -32,9 +32,17 @@ class Expr :
             newTuple = (self.op1, float(self.op2) + float(numToAdd))
             symTable[indexOfOutput] = newTuple
         elif self.operator == "-":
-            return symTable[op1] - symTable[op2]
+            Output = list(filter(lambda x:self.op1 in x, symTable)) 
+            indexOfOutput = symTable.index(Output[0])
+            numToAdd = Output[0][1]
+            newTuple = (self.op1, float(numToAdd) - float(self.op2))
+            symTable[indexOfOutput] = newTuple
         elif self.operator == "*":
-            return symTable[op1] * symTable[op2]
+            Output = list(filter(lambda x:self.op1 in x, symTable)) 
+            indexOfOutput = symTable.index(Output[0])
+            numToAdd = Output[0][1]
+            newTuple = (self.op1, float(self.op2) * float(numToAdd))
+            symTable[indexOfOutput] = newTuple
         elif self.operator == "/":
             return symTable[op1]/symTable[op2]
         elif self.operator == "<":
