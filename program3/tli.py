@@ -24,12 +24,13 @@ class Expr :
             return symTable[op1]
         elif self.operator == "=":
             tupleToAdd = (self.op1, self.op2)
-            print(tupleToAdd)
             symTable.append(tupleToAdd)
         elif self.operator == "+":
-            print(self.op1)
             Output = list(filter(lambda x:self.op1 in x, symTable)) 
-            print(symTable.index(Output[0]))
+            indexOfOutput = symTable.index(Output[0])
+            numToAdd = Output[0][1]
+            newTuple = (self.op1, float(self.op2) + float(numToAdd))
+            symTable[indexOfOutput] = newTuple
         elif self.operator == "-":
             return symTable[op1] - symTable[op2]
         elif self.operator == "*":
