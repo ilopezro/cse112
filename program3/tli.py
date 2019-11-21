@@ -22,8 +22,14 @@ class Expr :
             return symTable[op1]
         elif self.operator == "const":
             return symTable[op1]
+        elif self.operator == "=":
+            tupleToAdd = (self.op1, self.op2)
+            print(tupleToAdd)
+            symTable.append(tupleToAdd)
         elif self.operator == "+":
-            return symTable[op1] + symTable[op2]
+            print(self.op1)
+            Output = list(filter(lambda x:self.op1 in x, symTable)) 
+            print(symTable.index(Output[0]))
         elif self.operator == "-":
             return symTable[op1] - symTable[op2]
         elif self.operator == "*":
@@ -72,7 +78,27 @@ class Stmt :
             for item in self.exprs:
                 stringToPrint += item.strip("\"") + " "
             print(stringToPrint)
+        elif self.keyword == "let":
+            if len(self.exprs) > 5:
+                print("invalid expression")
+            elif len(self.exprs) > 3:
+                expressionToEval = Expr(self.exprs[2], self.exprs[3], self.exprs[4])
+                expressionToEval.eval(symTable)
+            else:
+                expressionToEval = Expr(self.exprs[0], self.exprs[1], self.exprs[2])
+                expressionToEval.eval(symTable)
+               
+  
 
+def parseExpr(line, statementList, symTable, counter):
+    if(line[0] == "let" or line[0] == "if" or line[0] == "print" or line[0] == "input"):
+        stmt = Stmt(line[0], line[1:])
+        statementList.append(stmt)
+    if(":" in line[0]):
+        labelTuple = (line[0].strip(":"), counter)
+        symTable.append(labelTuple)
+        stmt = Stmt(line[1], line[2:])
+        statementList.append(stmt)
 
 def main():
     statementList = [] 
@@ -84,21 +110,13 @@ def main():
     for line in file:
         counter += 1
         initSplit = line.split()
-        if(initSplit[0] == "let" or initSplit[0] == "if" or initSplit[0] == "print" or initSplit[0] == "input"):
-            stmt = Stmt(initSplit[0], initSplit[1:])
-            statementList.append(stmt)
-        if(":" in initSplit[0]):
-            labelTuple = (initSplit[0].strip(":"), counter)
-            symTable.append(labelTuple)
-            stmt = Stmt(initSplit[1], initSplit[2:])
-            statementList.append(stmt)
+        parseExpr(initSplit, statementList, symTable, counter)
+        
     file.close()
 
     for stmt in statementList:
         stmt.perform(symTable)
-    
-    print(symTable)
-
+    print (symTable)
 
 main()
 
