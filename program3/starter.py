@@ -95,16 +95,9 @@ def main():
         parseExpr(initSplit, statementList, symTable, counter)
     file.close()
 
-    key = 0
-    for item in statementList:
-        key += 1
-        try:
-            stmt = statementList[key]
-            stmt.perform(symTable, key)
-        except:
-            key += 1
-            stmt = statementList[key]
-            stmt.perform(symTable, key)
-
-    print(symTable)
+    # lineNum = 0 
+    # for item in statementList:
+    for key in statementList:
+        statementList[key].perform(symTable, key)
+    
 main()
