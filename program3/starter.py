@@ -19,7 +19,7 @@ class Expr :
     # evaluate this expression given the environment of the symTable
     def eval(self, symTable):
         if self.operator == "var":
-            return symTable[op1]
+            return symTable[self.op1]
         else:
             return 0
 
@@ -42,17 +42,41 @@ class Stmt :
             try:
                 userInput = float(input())
             except:
-                sys.exit("Invalid input.")
+                sys.exit("Illegal or missing input")
             valueToAdd = {self.exprs[0]: float(userInput)}
             symTable.update(valueToAdd)
         elif self.keyword == "print":
+            #if the expression contains quotation marks, its a string just print 
+            #if expression is just a const, print 
+            #if expression is a variable, return variable value 
             stringToPrint = ""
+            quoteCounter = 0
             for item in self.exprs:
-                stringToPrint += item.strip("\"") + " "
+                if "\"" in item:
+                    quoteCounter += 1
+                    if(quoteCounter % 2 == 0):
+                        stringToPrint += item.strip("\"") + " "
+                        continue
+                if quoteCounter % 2 != 0:
+                    stringToPrint += item.strip("\"") + " "
+                
+                if quoteCounter % 2 == 0 and not("," in item):
+                    try:
+                        float(item)
+                        stringToPrint += str(float(item)) + " "
+                    except:
+                        expressionToEval = Expr(item, "var")
+                        try:
+                            result = expressionToEval.eval(symTable)
+                            stringToPrint += str(result) + " "
+                        except:
+                            sys.exit("Invalid call for variable")   
             print(stringToPrint)
             
 
 def parseExpr(line, statementList, symTable, counter):
+    if len(line) == 0:
+        return
     if(line[0] == "let" or line[0] == "if" or line[0] == "print" or line[0] == "input"):
         stmt = Stmt(line[0], line[1:])
         statementList.append(stmt)
