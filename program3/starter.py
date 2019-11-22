@@ -36,7 +36,7 @@ class Stmt :
         return self.keyword + others
 
     # perform/execute this statement given the environment of the symTable
-    def perform(self, symTable):
+    def perform(self, symTable, lineNum):
         print ("Doing: " + str(self))
         if self.keyword == "input":
             try:
@@ -46,9 +46,6 @@ class Stmt :
             valueToAdd = {self.exprs[0]: float(userInput)}
             symTable.update(valueToAdd)
         elif self.keyword == "print":
-            #if the expression contains quotation marks, its a string just print 
-            #if expression is just a const, print 
-            #if expression is a variable, return variable value 
             stringToPrint = ""
             quoteCounter = 0
             for item in self.exprs:
@@ -70,7 +67,7 @@ class Stmt :
                             result = expressionToEval.eval(symTable)
                             stringToPrint += str(result) + " "
                         except:
-                            sys.exit("Invalid call for variable")   
+                            sys.exit("Invalid call for variable at line " + str(lineNum))
             print(stringToPrint)
             
 
@@ -78,16 +75,16 @@ def parseExpr(line, statementList, symTable, counter):
     if len(line) == 0:
         return
     if(line[0] == "let" or line[0] == "if" or line[0] == "print" or line[0] == "input"):
-        stmt = Stmt(line[0], line[1:])
-        statementList.append(stmt)
+        stmt = {counter: Stmt(line[0], line[1:])}
+        statementList.update(stmt)
     if(":" in line[0]):
         symTable.update({line[0].strip(":") : counter})
-        stmt = Stmt(line[1], line[2:])
-        statementList.append(stmt)
+        stmt = {counter: Stmt(line[1], line[2:])}
+        statementList.update(stmt)
 
 def main():
     symTable = {}
-    statementList = []
+    statementList = {}
 
     filePath = sys.argv[1]
     file = open('./' + filePath)
@@ -98,8 +95,16 @@ def main():
         parseExpr(initSplit, statementList, symTable, counter)
     file.close()
 
-    for stmt in statementList:
-        stmt.perform(symTable)
+    key = 0
+    for item in statementList:
+        key += 1
+        try:
+            stmt = statementList[key]
+            stmt.perform(symTable, key)
+        except:
+            key += 1
+            stmt = statementList[key]
+            stmt.perform(symTable, key)
 
     print(symTable)
 main()
