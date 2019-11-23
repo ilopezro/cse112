@@ -17,12 +17,32 @@ class Expr :
             return self.op1 + " " + self.operator + " " +  self.op2
 
     # evaluate this expression given the environment of the symTable
-    def eval(self, symTable):
+    def eval(self, symTable, lineNum):
         if self.operator == "var":
             return symTable[self.op1]
+        elif self.operator == "+":
+            return self.op1 + self.op2
+        elif self.operator == "-":
+            return self.op1 - self.op2
+        elif self.operator == "*":
+            return self.op1 * self.op2
+        elif self.operator == "/":
+            return self.op1 / self.op2
+        elif self.operator == "<":
+            return self.op1 < self.op2
+        elif self.operator == ">":
+            return self.op1 > self.op2
+        elif self.operator == "<=":
+            return self.op1 <= self.op2
+        elif self.operator == ">=":
+            return self.op1 >= self.op2
+        elif self.operator == "==":
+            return self.op1 == self.op2
+        elif self.operator == "!=":
+            return self.op1 != self.op2
         else:
-            return 0
-
+            sys.exit("Syntax error on line " + str(lineNum))
+    
 # used to store a parsed TL statement
 class Stmt :
     def __init__(self,keyword,exprs):
@@ -37,7 +57,7 @@ class Stmt :
 
     # perform/execute this statement given the environment of the symTable
     def perform(self, symTable, lineNum):
-        print ("Doing: " + str(self))
+        # print ("Doing: " + str(self))
         if self.keyword == "input":
             try:
                 userInput = float(input())
@@ -45,6 +65,7 @@ class Stmt :
                 sys.exit("Illegal or missing input")
             valueToAdd = {self.exprs[0]: float(userInput)}
             symTable.update(valueToAdd)
+            return lineNum
         elif self.keyword == "print":
             stringToPrint = ""
             quoteCounter = 0
@@ -64,13 +85,46 @@ class Stmt :
                     except:
                         expressionToEval = Expr(item, "var")
                         try:
-                            result = expressionToEval.eval(symTable)
+                            result = expressionToEval.eval(symTable, lineNum)
                             stringToPrint += str(result) + " "
                         except:
                             sys.exit("Invalid call for variable at line " + str(lineNum))
             print(stringToPrint)
+            return lineNum
+        elif self.keyword == "let":
+            if len(self.exprs) > 5:
+                sys.exit("Syntax error on line " + str(lineNum))
+            elif len(self.exprs) > 3: # expression
+                op1, operator, op2 = self.exprs[2], self.exprs[3], self.exprs[4]
+                val1 = symTable.get(op1)
+                val2 = symTable.get(op2)
+                if(val1 is None):
+                    try:
+                        float(self.exprs[2])
+                        val1 = float(self.exprs[2])
+                    except:
+                        sys.exit("Undefined variable " + self.exprs[2] + " at line " + str(lineNum))
+                if(val2 is None):
+                    try:
+                        float(self.exprs[4])
+                        val2 = float(self.exprs[4])
+                    except:
+                        sys.exit("Undefined variable " + self.exprs[4] + " at line " + str(lineNum))
+                exprToEval = Expr(val1, operator, val2)
+                result = exprToEval.eval(symTable, lineNum)
+                del self.exprs[2:5]
+                self.exprs.append(result)
+                self.perform(symTable, lineNum)
+            elif len(self.exprs) < 2:
+                sys.exit("Syntax error on line " + str(lineNum))
+            else: #assignment
+                val = symTable.get(self.exprs[2])
+                if(val is None):
+                    val = float(self.exprs[2])
+                toAdd = {self.exprs[0] : val}
+                symTable.update(toAdd)
+            return lineNum
             
-
 def parseExpr(line, statementList, symTable, counter):
     if len(line) == 0:
         return
@@ -95,9 +149,7 @@ def main():
         parseExpr(initSplit, statementList, symTable, counter)
     file.close()
 
-    # lineNum = 0 
-    # for item in statementList:
     for key in statementList:
-        statementList[key].perform(symTable, key)
+        toGo = statementList[key].perform(symTable, key)
     
 main()
