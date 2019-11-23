@@ -57,7 +57,7 @@ class Stmt :
 
     # perform/execute this statement given the environment of the symTable
     def perform(self, symTable, lineNum):
-        # print ("Doing: " + str(self))
+        print ("Doing: " + str(self))
         if self.keyword == "input":
             try:
                 userInput = float(input())
@@ -91,6 +91,33 @@ class Stmt :
                             sys.exit("Invalid call for variable at line " + str(lineNum))
             print(stringToPrint)
             return lineNum
+        elif self.keyword == "if":
+            op1, operator, op2 = self.exprs[0], self.exprs[1], self.exprs[2]
+            val1 = symTable.get(op1)
+            val2 = symTable.get(op2)
+            isLabel = symTable.get(self.exprs[4])
+
+            if(val1 is None):
+                try:
+                    float(self.exprs[0])
+                    val1 = float(self.exprs[0])
+                except:
+                    sys.exit("Undefined variable " + self.exprs[0] + " at line " + str(lineNum) + ".")
+            if(val2 is None):
+                try:
+                    float(self.exprs[2])
+                    val2 = float(self.exprs[2])
+                except:
+                    sys.exit("Undefined variable " + self.exprs[2] + " at line " + str(lineNum) + ".")
+            exprToEval = Expr(val1, operator, val2)
+            result = exprToEval.eval(symTable, lineNum)
+            if(result):
+                if(isLabel is None):
+                    sys.exit("Illegal goto " + self.exprs[4] + " at line " + str(lineNum) + ".")
+                else:
+                    return isLabel
+            else:
+                return lineNum
         elif self.keyword == "let":
             if len(self.exprs) > 5:
                 sys.exit("Syntax error on line " + str(lineNum))
@@ -120,10 +147,15 @@ class Stmt :
             else: #assignment
                 val = symTable.get(self.exprs[2])
                 if(val is None):
-                    val = float(self.exprs[2])
-                toAdd = {self.exprs[0] : val}
-                symTable.update(toAdd)
+                    try:
+                        val = float(self.exprs[2])
+                        toAdd = {self.exprs[0] : val}
+                        symTable.update(toAdd)
+                    except:
+                        sys.exit("Undefined variable " + self.exprs[2] + " at line " + str(lineNum))
             return lineNum
+        else:
+            sys.exit("Syntax error on line on line " + str(lineNum))
             
 def parseExpr(line, statementList, symTable, counter):
     if len(line) == 0:
@@ -134,6 +166,9 @@ def parseExpr(line, statementList, symTable, counter):
     if(":" in line[0]):
         symTable.update({line[0].strip(":") : counter})
         stmt = {counter: Stmt(line[1], line[2:])}
+        statementList.update(stmt)
+    else:
+        stmt = {counter: Stmt(line[0], line[1:])}
         statementList.update(stmt)
 
 def main():
@@ -151,5 +186,22 @@ def main():
 
     for key in statementList:
         toGo = statementList[key].perform(symTable, key)
-    
+
+    # i = 1
+    # while True:
+    #     try:
+    #         if(i > counter):
+    #             break
+    #         toGo = statementList[i].perform(symTable, i)
+    #         if(toGo != i):
+    #             i = toGo
+    #         else:
+    #             i += 1
+    #     except:
+    #         i+=1
+    #         if(i > counter):
+    #             break
+    #         else:
+    #             continue
+ 
 main()
