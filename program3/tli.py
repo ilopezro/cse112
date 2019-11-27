@@ -41,7 +41,7 @@ class Expr :
         elif self.operator == "!=":
             return self.op1 != self.op2
         else:
-            sys.exit("Syntax error on line " + str(lineNum))
+            sys.exit("Syntax error on line " + str(lineNum) + ".")
     
 # used to store a parsed TL statement
 class Stmt :
@@ -54,6 +54,9 @@ class Stmt :
         for exp in self.exprs:
             others = others + " " + str(exp)
         return self.keyword + others
+    
+    def createSentence(self, item):
+        print(item)
 
     # perform/execute this statement given the environment of the symTable
     def perform(self, symTable, lineNum):
@@ -120,7 +123,7 @@ class Stmt :
                 return lineNum + 1
         elif self.keyword == "let":
             if len(self.exprs) > 5:
-                sys.exit("Syntax error on line " + str(lineNum))
+                sys.exit("Syntax error on line " + str(lineNum) + ".")
             elif len(self.exprs) > 3: # expression
                 op1, operator, op2 = self.exprs[2], self.exprs[3], self.exprs[4]
                 val1 = symTable.get(op1)
@@ -145,7 +148,7 @@ class Stmt :
                 # self.exprs.append(result)
                 # self.perform(symTable, lineNum)
             elif len(self.exprs) < 2:
-                sys.exit("Syntax error on line " + str(lineNum))
+                sys.exit("Syntax error on line " + str(lineNum) + ".")
             else: #assignment
                 val = symTable.get(self.exprs[2])
                 if(val is None):
@@ -157,7 +160,7 @@ class Stmt :
                 symTable.update(toAdd)
             return lineNum + 1
         else:
-            sys.exit("Syntax error on line on line " + str(lineNum))
+            sys.exit("Syntax error on line " + str(lineNum) + ".")
             
 def parseExpr(line, statementList, symTable, counter):
     if len(line) == 0:
