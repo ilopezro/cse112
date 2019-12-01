@@ -37,16 +37,18 @@ object TLI {
         var symTable = Map[Double, String]()
         var statementList = Map[Double, Expr]()
         var lineCounter:Double = 0
+        var inputPath:String = ""; 
         try{
-            var inputPath = args(0)
+            inputPath = args(0)
         }catch{
             case x: ArrayIndexOutOfBoundsException => {
-                println("Usage error")
+                println("Usage: TLI <inputFilePath>")
                 System.exit(0)
             }
         }
 
-        val bufferedSource = Source.fromFile("./in")
+        val bufferedSource = Source.fromFile(s"./$inputPath")
+        
         for (line <- bufferedSource.getLines) {
             lineCounter += 1
             // parseExpr(line, symTable, statementList, lineCounter)
