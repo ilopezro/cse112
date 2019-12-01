@@ -22,29 +22,36 @@ object TLI {
 	    case _ => return -1 // should really throw an error
     }
 
-    def parseExpr(line: Array[String], symTab: Map[String, Double], stmtList: Map[Double, Expr], counter: Double) = {
+    def parseExpr(line: Array[String], symTab: Map[Double, String], stmtList: Map[Double, Expr], counter: Double) = {
         breakable{
             if(line(0) == ""){
-                println("empty line on line " + counter)
                 break
-            }else{
-                println(line(0) + " " + counter)
+            }else if(line(0) == "let"){
+
             }
         }
         
     }
 
     def main(args: Array[String]) = {
-        var symTable = Map[String, Double]()
+        var symTable = Map[Double, String]()
         var statementList = Map[Double, Expr]()
         var lineCounter:Double = 0
+        try{
+            var inputPath = args(0)
+        }catch{
+            case x: ArrayIndexOutOfBoundsException => {
+                println("Usage error")
+                System.exit(0)
+            }
+        }
 
         val bufferedSource = Source.fromFile("./in")
         for (line <- bufferedSource.getLines) {
             lineCounter += 1
             // parseExpr(line, symTable, statementList, lineCounter)
             var newLine:Array[String] = line.trim().split("\\s+")
-            symTable += (newLine(0) -> lineCounter);
+            symTable += (lineCounter -> newLine(0));
             parseExpr(newLine, symTable, statementList, lineCounter)
         }
         bufferedSource.close
