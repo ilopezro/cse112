@@ -1,4 +1,5 @@
 import scala.collection.mutable.Map
+import scala.collection.mutable.ListBuffer
 import scala.io.Source
 import util.control.Breaks._
 import scala.io.StdIn.readInt
@@ -13,7 +14,7 @@ abstract class Stmt
 case class Let(variable: String, expr: Expr) extends Stmt
 case class If(expr: Expr, label: String) extends Stmt
 case class Input(variable: String) extends Stmt
-case class Print(exprList: List[Expr]) extends Stmt
+case class Print(exprList: ListBuffer[Expr]) extends Stmt
 
 object TLI {
     def eval(expr: Expr, symTab: Map[String, Double], lineNum: Double): Double = expr match {
@@ -38,6 +39,12 @@ object TLI {
             symTab += (in -> newInput)
             return lineNum;
         }
+        case Print(list) => {
+            for(i <- list){
+                println(i)
+            }
+            return lineNum;
+        }
         case _ => println("idk some error message here"); return -1; 
     }
 
@@ -54,12 +61,17 @@ object TLI {
                 var toStr: String = newLine.mkString(" ")
 
                 var newArray: Array[String] = toStr.split(" , ");
-                var exprList = List[Expr](); 
+                var exprList = ListBuffer[Expr]();
                 for(i <- newArray){
                     //checks to see if the string is a digit
                     if(i.forall(_.isDigit)){
-                        var const = Constant(i.asInstanceOf[Double])
-                        exprList += const; 
+                        var newDub = i.toDouble
+                        var const = Constant(newDub)
+                        exprList += const;  
+                    }else if(i.contains("\"")){
+                        exprList += Str(i)
+                    }else{
+                        exprList += Var(i)
                     }
                 }
 
@@ -101,9 +113,10 @@ object TLI {
 
         var stmtListKeySet = statementList.keySet; 
         var i = 0; 
-        
-        statementList get 8 match {
+
+        statementList get 10 match {
             case Some(Input(i)) => perform(Input(i), symTable, 8);
+            case Some(Print(list)) => perform(Print(list), symTable, 10);
             case _ => println("still debugging")
         }
         // println(stmt)
