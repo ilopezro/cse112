@@ -52,17 +52,18 @@ object TLI {
             }else if(line(0) == "print"){
                 var newLine = line.drop(1)
                 var toStr: String = newLine.mkString(" ")
-                //convert toStr to array using split method on commas
-                var newArray: Array[String] = toStr.split(" , ");
-                var i = 0; 
-                var length = newArray.length;
-                for(i <- length){
-                    println(i)
-                }
-                //convert array to list of expressions 
-                //add to statmentList 
 
-                // stmtList += (counter -> Print)
+                var newArray: Array[String] = toStr.split(" , ");
+                var exprList = List[Expr](); 
+                for(i <- newArray){
+                    //checks to see if the string is a digit
+                    if(i.forall(_.isDigit)){
+                        var const = Constant(i.asInstanceOf[Double])
+                        exprList += const; 
+                    }
+                }
+
+                stmtList += (counter -> Print(exprList))
             }else if(line(0) == "input"){
                 stmtList += (counter -> Input(line(1)));
             }else if(line(0) contains ":"){
