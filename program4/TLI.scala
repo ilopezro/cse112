@@ -59,7 +59,8 @@ object TLI {
                     //checks to see if the string is a digit
                     if(i.forall(_.isDigit)){
                         var const = Constant(i.asInstanceOf[Double])
-                        exprList += const; 
+			println(const); 
+                        //exprList = exprList :: const; 
                     }
                 }
 
