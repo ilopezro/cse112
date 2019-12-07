@@ -18,16 +18,36 @@ case class Print(exprList: ListBuffer[Expr]) extends Stmt
 
 object TLI {
     def eval(expr: Expr, symTab: Map[String, Double], lineNum: Double): Double = expr match {
-        case BinOp("+",e1,e2) => eval(e1,symTab, lineNum) + eval(e2,symTab, lineNum) 
+        case BinOp("+",e1,e2) => {
+            return eval(e1,symTab, lineNum) + eval(e2,symTab, lineNum)
+        }
+        case BinOp("-",e1,e2) => {
+            return eval(e1,symTab, lineNum) - eval(e2,symTab, lineNum)
+        }
+        case BinOp("/",e1,e2) => {
+            return eval(e1,symTab, lineNum) / eval(e2,symTab, lineNum)
+        } 
+        case BinOp("*",e1,e2) => {
+            return eval(e1,symTab, lineNum) * eval(e2,symTab, lineNum)
+        }
         case Var(expr) => {
-            //return expression if it exists, if not error
-            println(expr);
-            return 1
+            var someVal = symTab get expr match {
+                case None =>{
+                    println(symTab)
+                    println(s"Undefined variable $expr at line $lineNum.")
+                    System.exit(0); 
+                    return 0; 
+                }
+                case Some(x: Double) => {
+                    return x; 
+                }
+            }
+            return someVal; 
         }
         case Constant(expr) => {
             return expr; 
         }
-	    case _ => System.exit(0); return -1 // should really throw an error
+	    case _ => println(s"something went wrong in eval line $lineNum"); System.exit(0); return -1 // should really throw an error
     }
 
     def perform(stmt: Stmt, symTab: Map[String, Double], lineNum: Double): Double = stmt match {
@@ -46,12 +66,43 @@ object TLI {
             return lineNum;
         }
         case Print(list) => {
-            //
-            println("hi from print")
+            var string: String = ""; 
+            for(x <- list){
+                x match {
+                    case Str(str) => {
+                        string += str.replaceAll("\"", "")
+                    }
+                    case Constant(const) =>{
+                        string += s"$const"
+                    }
+                    case Var(v) => {
+                        var value = eval(x, symTab, lineNum)
+                        string += s"$value"
+                    }
+                    case _ =>{
+                        println("some type of error")
+                    }
+                }
+                string+= " "
+            }
+            println(string)
             return lineNum;
         }
         case Let(str, expr) =>{
-            println("hello from let")
+            expr match {
+                case Constant(x) => {
+                    var dubConst = x.asInstanceOf[Double]
+                    symTab += (str -> dubConst)
+                }
+                case Var(x) => {
+                    var value = eval(expr, symTab, lineNum)
+                    symTab += (str -> value)
+                }
+                case BinOp(operator, ex1, ex2)=> {
+                    var value = eval(expr, symTab, lineNum);
+                    symTab += (str -> value)
+                }
+            }
             return lineNum; 
         }
         case If(expr, label) => {
@@ -170,13 +221,13 @@ object TLI {
             parseExpr(newLine, symTable, statementList, lineCounter)
         }
 
-        var stmtListKeySet = statementList.keySet; 
+        var stmtListKeySet = statementList.keySet;
 
         for(i <- stmtListKeySet) { 
             Some(statementList(i)) match {
-                case Some(Input(i)) => perform(Input(i), symTable, 8);
-                case Some(Print(list)) => perform(Print(list), symTable, 10);
-                case Some(Let(str, expr)) => println("we in let. leggo")
+                case Some(Input(x)) => perform(Input(x), symTable, i);
+                case Some(Print(list)) => perform(Print(list), symTable, i);
+                case Some(Let(str, expr)) => perform(Let(str, expr), symTable, i)
                 case _ => println("still debugging")
             }
         }
@@ -201,7 +252,7 @@ object TLI {
         // println(v.isInstanceOf[Var]);
 
         bufferedSource.close
-        println(symTable)
-        println(statementList)
+        // println(symTable)
+        // println(statementList)
     }
 }
