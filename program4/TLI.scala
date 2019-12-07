@@ -30,6 +30,30 @@ object TLI {
         case BinOp("*",e1,e2) => {
             return eval(e1,symTab, lineNum) * eval(e2,symTab, lineNum)
         }
+        case BinOp(">",e1,e2) => {
+            if(eval(e1,symTab, lineNum) > eval(e2,symTab, lineNum)) return 1
+            else return 0
+        }
+        case BinOp("<",e1,e2) => {
+            if(eval(e1,symTab, lineNum) < eval(e2,symTab, lineNum)) return 1
+            else return 0
+        }
+        case BinOp(">=",e1,e2) => {
+            if(eval(e1,symTab, lineNum) >= eval(e2,symTab, lineNum)) return 1
+            else return 0
+        }
+        case BinOp("<=",e1,e2) => {
+            if(eval(e1,symTab, lineNum) <= eval(e2,symTab, lineNum)) return 1
+            else return 0
+        }
+        case BinOp("==",e1,e2) => {
+            if(eval(e1,symTab, lineNum) == eval(e2,symTab, lineNum)) return 1
+            else return 0
+        }
+        case BinOp("!=",e1,e2) => {
+            if(eval(e1,symTab, lineNum) != eval(e2,symTab, lineNum)) return 1
+            else return 0
+        }
         case Var(expr) => {
             var someVal = symTab get expr match {
                 case None =>{
@@ -105,8 +129,22 @@ object TLI {
             return lineNum; 
         }
         case If(expr, label) => {
-            println("hello from if")
-            return lineNum;
+            var value = eval(expr, symTab, lineNum)
+            if(value == 1){
+                val labelLineNum = symTab get label match {
+                    case None => {
+                        println(s"Illegal goto $label at line $lineNum.")
+                        System.exit(0);
+                        return -1; 
+                    }
+                    case Some(x: Double) => {
+                        return x; 
+                    }
+                }
+                return labelLineNum; 
+            }else{
+                return lineNum; 
+            }
         }
         case _ => println("idk some error message here"); return -1; 
     }
@@ -164,7 +202,6 @@ object TLI {
             }else if(line(0) == "if"){
                 //If(expr, label)
                 var exprToAddress = line.drop(1)
-                //0, 1, 2 in exprToAddress we have to evaluate
                 var leftVar = Var("");
                 var leftConst = Constant(0);
                 var rightVar = Var("");
