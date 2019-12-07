@@ -58,7 +58,8 @@ object TLI {
         case Var(expr) => {
             var someVal = symTab get expr match {
                 case None =>{
-                    println(s"Undefined variable $expr at line $lineNum.")
+                    var newLineNum = lineNum.asInstanceOf[Int]
+                    println(s"Undefined variable $expr at line $newLineNum.")
                     System.exit(0); 
                     return 0; 
                 }
@@ -71,7 +72,7 @@ object TLI {
         case Constant(expr) => {
             return expr; 
         }
-	    case _ => println(s"Syntax error on line $lineNum."); System.exit(0); return -1 // should really throw an error
+	    case _ => var newLineNum = lineNum.asInstanceOf[Int]; println(s"Syntax error on line $newLineNum."); System.exit(0); return -1 // should really throw an error
     }
 
     def perform(stmt: Stmt, symTab: Map[String, Double], lineNum: Double): Double = stmt match {
@@ -134,7 +135,8 @@ object TLI {
             if(value == 1){
                 val labelLineNum = symTab get label match {
                     case None => {
-                        println(s"Illegal goto $label at line $lineNum.")
+                        var newLineNum = lineNum.asInstanceOf[Int]
+                        println(s"Illegal goto $label at line $newLineNum.")
                         System.exit(0);
                         return -1; 
                     }
@@ -148,7 +150,10 @@ object TLI {
             }
         }
         case EmptyLine() => return lineNum + 1
-        case _ => println(s"Syntax error on line $lineNum"); return -1; 
+        case _ => {
+            var newLineNum = lineNum.asInstanceOf[Int]
+            println(s"Syntax error on line $newLineNum"); return -1; 
+        }
     }
 
     def parseExpr(line: Array[String], symTab: Map[String, Double], stmtList: Map[Double, Stmt], counter: Double): Unit = {
