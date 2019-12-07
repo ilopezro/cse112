@@ -15,6 +15,7 @@ case class Let(variable: String, expr: Expr) extends Stmt
 case class If(expr: Expr, label: String) extends Stmt
 case class Input(variable: String) extends Stmt
 case class Print(exprList: ListBuffer[Expr]) extends Stmt
+case class EmptyLine() extends Stmt
 
 object TLI {
     def eval(expr: Expr, symTab: Map[String, Double], lineNum: Double): Double = expr match {
@@ -70,7 +71,7 @@ object TLI {
         case Constant(expr) => {
             return expr; 
         }
-	    case _ => println(s"something went wrong in eval line $lineNum"); System.exit(0); return -1 // should really throw an error
+	    case _ => println(s"Syntax error on line $lineNum."); System.exit(0); return -1 // should really throw an error
     }
 
     def perform(stmt: Stmt, symTab: Map[String, Double], lineNum: Double): Double = stmt match {
@@ -86,7 +87,7 @@ object TLI {
             }
             var newInput = userInput.asInstanceOf[Double];
             symTab += (in -> newInput)
-            return lineNum;
+            return lineNum + 1;
         }
         case Print(list) => {
             var string: String = ""; 
@@ -98,7 +99,7 @@ object TLI {
                     case Constant(const) =>{
                         string += s"$const"
                     }
-                    case Var(v) => {
+                    case BinOp(operator, op1, op2) => {
                         var value = eval(x, symTab, lineNum)
                         string += s"$value"
                     }
@@ -109,7 +110,7 @@ object TLI {
                 string+= " "
             }
             println(string)
-            return lineNum;
+            return lineNum + 1;
         }
         case Let(str, expr) =>{
             expr match {
@@ -126,7 +127,7 @@ object TLI {
                     symTab += (str -> value)
                 }
             }
-            return lineNum; 
+            return lineNum + 1; 
         }
         case If(expr, label) => {
             var value = eval(expr, symTab, lineNum)
@@ -143,16 +144,17 @@ object TLI {
                 }
                 return labelLineNum; 
             }else{
-                return lineNum; 
+                return lineNum + 1; 
             }
         }
-        case _ => println("idk some error message here"); return -1; 
+        case EmptyLine() => return lineNum + 1
+        case _ => println(s"Syntax error on line $lineNum"); return -1; 
     }
 
     def parseExpr(line: Array[String], symTab: Map[String, Double], stmtList: Map[Double, Stmt], counter: Double): Unit = {
         breakable{
             if(line(0) == ""){
-                break
+                stmtList += (counter -> EmptyLine())
             }else if(line(0) == "let"){
                 //Let(var, expr)
                 var varToInsert = line(1); 
@@ -250,6 +252,41 @@ object TLI {
                         exprList += const;  
                     }else if(i.contains("\"")){
                         exprList += Str(i)
+                    }else if(!i.forall(_.isLetterOrDigit)){
+                        var arr: Array[String] = i.split(" ");
+
+                        var leftConst = Constant(0);
+                        var rightConst = Constant(0);
+                        var leftVar = Var("");
+                        var rightVar = Var("");
+                        var isLeftVar = false; 
+                        var isRightVar = false; 
+
+                        println(arr.mkString(" "))
+
+                        if(arr(0).forall(_.isDigit)){
+                            leftConst = Constant(arr(0).toDouble);
+                        }else{
+                            leftVar = Var(arr(0))
+                            isLeftVar = true; 
+                        }
+
+                        if(arr(2).forall(_.isDigit)){
+                            leftConst = Constant(arr(2).toDouble);
+                        }else{
+                            leftVar = Var(arr(2))
+                            isLeftVar = true; 
+                        }
+
+                        if(isLeftVar && isRightVar){
+                            exprList += BinOp(arr(1), leftVar, rightVar)
+                        }else if(isLeftVar){
+                            exprList += BinOp(arr(1), leftVar, rightConst)
+                        }else if(isRightVar){
+                            exprList += BinOp(arr(1), leftConst, rightVar)
+                        }else{
+                            exprList += BinOp(arr(1), leftConst, rightConst)
+                        }
                     }else{
                         exprList += Var(i)
                     }
@@ -294,15 +331,33 @@ object TLI {
 
         var stmtListKeySet = statementList.keySet;
 
-        for(i <- stmtListKeySet) { 
-            Some(statementList(i)) match {
-                case Some(Input(x)) => perform(Input(x), symTable, i);
-                case Some(Print(list)) => perform(Print(list), symTable, i);
-                case Some(Let(str, expr)) => perform(Let(str, expr), symTable, i)
-                case Some(If(expr, label)) => perform(If(expr, label), symTable, i)
-                case _ => println("still debugging")
+        // for(i <- stmtListKeySet) { 
+        //     Some(statementList(i)) match {
+        //         case Some(Input(x)) => perform(Input(x), symTable, i);
+        //         case Some(Print(list)) => perform(Print(list), symTable, i);
+        //         case Some(Let(str, expr)) => perform(Let(str, expr), symTable, i)
+        //         case Some(If(expr, label)) => perform(If(expr, label), symTable, i)
+        //         case _ => println("still debugging")
+        //     }
+        // }   
+
+       
+        var numLine:Double = 1.0; 
+        while(true) {
+            if (numLine > lineCounter){
+                System.exit(0)
             }
+            var goTo:Double = Some(statementList(numLine)) match{
+                case Some(Input(x)) => perform(Input(x), symTable, numLine);
+                case Some(Print(list)) =>  perform(Print(list), symTable, numLine);
+                case Some(Let(str, expr)) =>  perform(Let(str, expr), symTable, numLine)
+                case Some(If(expr, label)) =>  perform(If(expr, label), symTable, numLine)
+                case Some(EmptyLine()) => perform(EmptyLine(), symTable, numLine)
+                case _ => println(s"Syntax error on line $numLine"); System.exit(0); -1
+            }
+            numLine = goTo
         }
+        
 
         // println(stmt)
 
