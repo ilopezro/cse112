@@ -33,7 +33,6 @@ object TLI {
         case Var(expr) => {
             var someVal = symTab get expr match {
                 case None =>{
-                    println(symTab)
                     println(s"Undefined variable $expr at line $lineNum.")
                     System.exit(0); 
                     return 0; 
@@ -112,7 +111,7 @@ object TLI {
         case _ => println("idk some error message here"); return -1; 
     }
 
-    def parseExpr(line: Array[String], symTab: Map[String, Double], stmtList: Map[Double, Stmt], counter: Double) = {
+    def parseExpr(line: Array[String], symTab: Map[String, Double], stmtList: Map[Double, Stmt], counter: Double): Unit = {
         breakable{
             if(line(0) == ""){
                 break
@@ -161,12 +160,45 @@ object TLI {
                         var binaryOp = BinOp(restOfExpr(2), leftConst, rightConst)
                         stmtList += (counter -> Let(varToInsert, binaryOp))
                     }
-                }else{
-                    println(s"Syntax error on line $counter.")
-                    System.exit(0)
                 }
             }else if(line(0) == "if"){
+                //If(expr, label)
+                var exprToAddress = line.drop(1)
+                //0, 1, 2 in exprToAddress we have to evaluate
+                var leftVar = Var("");
+                var leftConst = Constant(0);
+                var rightVar = Var("");
+                var rightConst = Constant(0);
+                var isRigthVar = false; 
+                var isLeftVar = false; 
 
+                if(exprToAddress(0).forall(_.isDigit)){
+                    leftConst = Constant(exprToAddress(0).toDouble);
+                }else{
+                    leftVar = Var(exprToAddress(0))
+                    isLeftVar = true; 
+                }
+
+                if(exprToAddress(2).forall(_.isDigit)){
+                    rightConst = Constant(exprToAddress(2).toDouble);
+                }else{
+                    rightVar = Var(exprToAddress(2))
+                    isRigthVar = true; 
+                }
+
+                if(isLeftVar && isRigthVar){
+                    var binaryOp = BinOp(exprToAddress(1), leftVar, rightVar)
+                    stmtList += (counter -> If(binaryOp, exprToAddress(4)))
+                }else if(isLeftVar){
+                    var binaryOp = BinOp(exprToAddress(1), leftVar, rightConst)
+                    stmtList += (counter -> If(binaryOp, exprToAddress(4)))
+                }else if(isRigthVar){
+                    var binaryOp = BinOp(exprToAddress(1), leftConst, rightVar)
+                    stmtList += (counter -> If(binaryOp, exprToAddress(4)))
+                }else{
+                    var binaryOp = BinOp(exprToAddress(1), leftConst, rightConst)
+                    stmtList += (counter -> If(binaryOp, exprToAddress(4)))
+                }
             }else if(line(0) == "print"){
                 var newLine = line.drop(1)
                 var toStr: String = newLine.mkString(" ")
@@ -190,6 +222,8 @@ object TLI {
                 stmtList += (counter -> Input(line(1)));
             }else if(line(0) contains ":"){
                 symTab += (line(0).replaceAll(":", "") -> counter)
+                var restOfExpr = line.drop(1)
+                parseExpr(restOfExpr, symTab, stmtList, counter)
             }else{
                 println(s"Syntax error on line $counter.")
                 System.exit(0)
@@ -228,6 +262,7 @@ object TLI {
                 case Some(Input(x)) => perform(Input(x), symTable, i);
                 case Some(Print(list)) => perform(Print(list), symTable, i);
                 case Some(Let(str, expr)) => perform(Let(str, expr), symTable, i)
+                case Some(If(expr, label)) => perform(If(expr, label), symTable, i)
                 case _ => println("still debugging")
             }
         }
