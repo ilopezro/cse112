@@ -101,11 +101,17 @@ object TLI {
                         string += s"$const"
                     }
                     case BinOp(operator, op1, op2) => {
+                        // println(x)
                         var value = eval(x, symTab, lineNum)
                         string += s"$value"
                     }
+                    case Var(x) =>{
+                        var value = eval(Var(x), symTab, lineNum)
+                        string += s"$value"
+                    }
                     case _ =>{
-                        println("some type of error")
+                        println(s"Error on line $lineNum")
+                        System.exit(0); 
                     }
                 }
                 string+= " "
@@ -259,7 +265,6 @@ object TLI {
                         exprList += Str(i)
                     }else if(!i.forall(_.isLetterOrDigit)){
                         var arr: Array[String] = i.split(" ");
-
                         var leftConst = Constant(0);
                         var rightConst = Constant(0);
                         var leftVar = Var("");
@@ -267,7 +272,7 @@ object TLI {
                         var isLeftVar = false; 
                         var isRightVar = false; 
 
-                        println(arr.mkString(" "))
+                        // println(arr.mkString(" "))
 
                         if(arr(0).forall(_.isDigit)){
                             leftConst = Constant(arr(0).toDouble);
@@ -277,10 +282,10 @@ object TLI {
                         }
 
                         if(arr(2).forall(_.isDigit)){
-                            leftConst = Constant(arr(2).toDouble);
+                            rightConst = Constant(arr(2).toDouble);
                         }else{
-                            leftVar = Var(arr(2))
-                            isLeftVar = true; 
+                            rightVar = Var(arr(2))
+                            isRightVar = true; 
                         }
 
                         if(isLeftVar && isRightVar){
@@ -304,7 +309,8 @@ object TLI {
                 var restOfExpr = line.drop(1)
                 parseExpr(restOfExpr, symTab, stmtList, counter)
             }else{
-                println(s"Syntax error on line $counter.")
+                var newLineNum = counter.asInstanceOf[Int];
+                println(s"Syntax error on line $newLineNum.")
                 System.exit(0)
             }
         }
